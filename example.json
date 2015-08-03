@@ -1,0 +1,28 @@
+{
+    "first_scene": "init",
+    "scenes": {
+	"init": {
+	    "scenario": "scene01.png",
+	    "script": [
+		{
+		    "operation": "time_wait",
+		    "arguments": [5.0]
+		},
+		{
+		    "operation": "go_to",
+		    "arguments": ["second"]
+		}
+	    ]
+	},
+	"second": {
+	    "scenario": "scene02.png",
+	    "script": [
+		{
+		    "operation": "time_wait",
+		    "arguments": [5.0]
+		}
+	    ],
+	    "outtro": "fade"
+	}
+    }
+}
