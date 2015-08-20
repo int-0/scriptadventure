@@ -24,8 +24,10 @@ def parse_commandline():
     return parser.parse_args()
 
 def main(adventure_script, options):
-    resolution = adventure_script.get('resolution', video.DEFAULT_RESOLUTION)
-    caption = adventure_script.get('window_caption', 'ScriptAdventure player')
+    config = adventure_script.get('system', {})
+    resolution = tuple(config.get('resolution',
+                                  video.DEFAULT_RESOLUTION))
+    caption = config.get('window_caption', 'ScriptAdventure player')
     
     # Init screen
     video.Screen(resolution, caption)

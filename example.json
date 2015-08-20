@@ -1,4 +1,18 @@
 {
+    "system": {
+	"resolution": [1024, 768],
+	"window_caption": "Test Aventure"
+    },
+    "layouts": {
+	"default": {
+	    "main_text": {
+		"type": "Box",
+		"position": [0, 600],
+		"size": [1024, 168],
+		"color": [255, 255, 255, 255]
+	    }
+	}
+    },
     "first_scene": "init",
     "scenes": {
 	"init": {
@@ -18,8 +32,14 @@
 	    "scenario": "scene02.png",
 	    "script": [
 		{
+		    "operation": "show_layout"
+		},
+		{
 		    "operation": "time_wait",
 		    "arguments": [5.0]
+		},
+		{
+		    "operation": "hide_layout"
 		}
 	    ],
 	    "outtro": "fade"

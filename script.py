@@ -51,3 +51,11 @@ class Interpreter(object):
     def cmd_go_to(self, scene):
         _DEB('Interpreter: go_to(%s)' % scene)
         self.__scene.jump_to(scene)
+
+    def cmd_show_layout(self, layout=None):
+        _DEB('Interpreter: show_widgets(%s)' % layout)
+        self.__scene.adventure.layouts.show(layout)
+
+    def cmd_hide_layout(self):
+        _DEB('Interpreter: hide_layout()')
+        self.__scene.adventure.layouts.hide()
