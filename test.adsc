@@ -1,0 +1,25 @@
+# Adventure Script demo 1
+#
+
+# Configure resolution, font and transition times
+#
+uicfg --resolution 1024x768 --caption "AdSc demo 1" --font liberationserif,28 --transition 4.0
+
+# Set text box at the bottom
+#
+text_area 200,600
+
+# Start music
+#
+play_music intro.ogg
+show_image scene01.png
+waste 4.0
+show_image scene02.png
+waste 4.0
+show_image scene03.png
+waste 4.0
+include say_something.adsc
+goto_sleep
+
+
+
