@@ -18,15 +18,10 @@ class Screen(object):
             # Init pygame if needed
             if not pygame.display.get_init():
                 pygame.display.init()
-            pygame.display.set_caption(caption)
-
+                
             self.__resolution = resolution
             self.__screen = pygame.display.set_mode(self.__resolution)
             self.__dirty = []
-            self.__renderer = Render(self)
-
-        def get_renderer(self):
-            return self.__renderer
         
         @property
         def size(self):
@@ -44,7 +39,14 @@ class Screen(object):
         def update(self):
             pygame.display.update(self.__dirty)
             self.__dirty = []
-                    
+
+        def set_caption(self, caption):
+            if caption is None:
+                return
+            if self.__screen is None:
+                return
+            pygame.display.set_caption(caption)
+
 
     __instance = None
     def __init__(self, resolution=None, caption=None):

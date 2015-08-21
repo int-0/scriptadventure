@@ -129,6 +129,7 @@ class TextArea(object):
         if ((self.__ofs[1] + self.__interline) >
             self.__scr.get_size()[1]):
             self.__scroll_up()
+        self.__first_word = True
 
     def __fit(self, word):
         size = self.__font.size(word)

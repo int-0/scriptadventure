@@ -1,0 +1,13 @@
+# Say Hello world!
+#
+say Hola!
+waste 3.0
+say Que tal?
+waste 2.0
+say Esto es un test...
+waste 2.0
+say Y ya se acaba...
+waste 1.0
+say Adios!! :D
+waste 1.0
+
