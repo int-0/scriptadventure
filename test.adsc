@@ -5,6 +5,9 @@
 #
 uicfg --resolution 1024x768 --caption "AdSc demo 1" --font liberationserif,28 --transition 4.0
 
+# Include external definitions
+include say_something.adsc
+
 # Set text box at the bottom
 #
 text_area 200,600
@@ -18,8 +21,5 @@ show_image scene02.png
 waste 4.0
 show_image scene03.png
 waste 4.0
-include say_something.adsc
+run_macro say_hello
 goto_sleep
-
-
-

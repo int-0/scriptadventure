@@ -25,6 +25,8 @@ class DummyUI(object):
 
 
 class AdventureScript(cmd.Cmd):
+    _macros = {}
+    _reading_macro = None
     __ui = None
     prompt = 'AdventureScript: '
     child_mode = False
@@ -40,9 +42,14 @@ class AdventureScript(cmd.Cmd):
         return
 
     def parseline(self, line):
-        line = line.strip()
-        if line.startswith('#'):
-            line = ''
+        if line.strip().startswith('#'):
+            return ('', '', '')
+        if self._reading_macro is not None:
+            if line.strip() == 'end_macro':
+                self._reading_macro = None
+            elif line != '':
+                self._macros[self._reading_macro].append(line)
+            return ('', '', '')
         return cmd.Cmd.parseline(self, line)
 
     def preloop(self):
@@ -127,13 +134,27 @@ class AdventureScript(cmd.Cmd):
 
     def do_include(self, line):
         "Include another adsc file"
-        fd = open(line, 'rt')
-        child_shell = AdventureScript(stdin=fd)
-        child_shell.use_rawinput = False
-        child_shell.child_mode = True
-        child_shell.attach(self.__ui)
-        child_shell.cmdloop()
-        
+        with open(line, 'rt') as fd:
+            for cmd in fd:
+                self.onecmd(cmd)
+
+    def do_new_macro(self, line):
+        if self._reading_macro is not None:
+            print 'ERROR: cannot create macro inside other macro'
+            return
+        self._reading_macro = line
+        self._macros[self._reading_macro] = []
+
+    def do_end_macro(self, line):
+        self._reading_macro = None
+
+    def do_run_macro(self, line):
+        if line not in self._macros.keys():
+            print 'ERROR: macro "%s" not defined'
+            return
+        for instruction in self._macros[line]:
+            self.onecmd(instruction)
+
     def do_exit(self, line):
         "Exit"
         return True

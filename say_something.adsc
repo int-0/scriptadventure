@@ -1,3 +1,5 @@
+new_macro say_hello
+
 # Say Hello world!
 #
 say Hola!
@@ -11,3 +13,4 @@ waste 1.0
 say Adios!! :D
 waste 1.0
 
+end_macro
