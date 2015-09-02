@@ -22,4 +22,9 @@ waste 4.0
 show_image scene03.png
 waste 4.0
 run_macro say_hello
+enter_actor actor01.png
+waste 4.0
+enter_actor actor02.png
+waste 4.0
+leave_actor actor01.png
 goto_sleep

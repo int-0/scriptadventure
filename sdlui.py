@@ -43,6 +43,10 @@ class UI(object):
     __font = None
     __text_area = None
     __text_position = None
+
+    __actor_position = {}
+    __actor_image = {}
+    __actors = []
     
     def __init__(self):
         self.__parser = NoExitArgumentParser(prog='ui', description='User Interface options')
@@ -145,6 +149,10 @@ class UI(object):
         self.__current_bgm = None
         pygame.mixer.music.stop()
 
+    def load_image(self, filename):
+        _DEB('Load image: %s' % filename)
+        return video.load_image(filename)
+            
     def show_image(self, filename):
         _DEB('Show image: %s' % filename)
         self.__assert_video_enabled__()
@@ -156,6 +164,85 @@ class UI(object):
         self.__assert_video_enabled__()
         self.__show_image__(video.empty_image(), fade_audio)
 
+    def enter_actor(self, filename):
+        _DEB('Enter actor: %s' % filename)
+        self.__assert_video_enabled__()
+
+        # Move current actors
+        new_positions = self.__get_center_points(len(self.__actors) + 1)
+        pos_idx = 0
+        drawed_actors = []
+        for actor in self.__actors:
+            actor_width = self.__actor_image[actor].get_width()
+            new_pos = (new_positions[pos_idx] - (actor_width / 2),
+                       self.__actor_position[actor][1])
+            self.__draw_scene(drawed_actors)
+            transitions.move(self.__actor_image[actor],
+                             self.__actor_position[actor],
+                             new_pos,
+                             .5)
+            drawed_actors.append(actor)
+            self.__actor_position[actor] = new_pos
+            pos_idx += 1
+            
+        # Put new actor
+        self.__actors.append(filename)
+        self.__actor_image[filename] = video.load_image(filename)
+        actor_width = self.__actor_image[filename].get_width()
+        actor_row = (self.__video.size[1] -
+                     self.__actor_image[filename].get_height())
+        self.__actor_position[filename] = (
+            new_positions[pos_idx] - (actor_width / 2),
+            actor_row
+        )
+        self.__draw_scene(drawed_actors)
+        transitions.move(self.__actor_image[filename],
+                         (-actor_width, actor_row),
+                         self.__actor_position[filename],
+                         1.0)
+
+        
+    def leave_actor(self, filename):
+        _DEB('Leave actor: %s' % filename)
+        self.__assert_video_enabled__()
+        actor_width = self.__actor_image[filename].get_width()
+        self.__actors.remove(filename)      
+        self.__draw_scene(self.__actors)
+        transitions.move(self.__actor_image[filename],
+                         self.__actor_position[filename],
+                         (-actor_width, self.__actor_position[filename][1]),
+                         1.0)
+
+        # Move remainder actors
+        new_positions = self.__get_center_points(len(self.__actors))
+        pos_idx = 0
+        drawed_actors = []
+        for actor in self.__actors:
+            actor_width = self.__actor_image[actor].get_width()
+            new_pos = (new_positions[pos_idx] - (actor_width / 2),
+                       self.__actor_position[actor][1])
+            self.__draw_scene(drawed_actors)
+            transitions.move(self.__actor_image[actor],
+                             self.__actor_position[actor],
+                             new_pos,
+                             .5)
+            self.__actor_position[actor] = new_pos
+            drawed_actors.append(actor)
+            pos_idx += 1
+
+        del(self.__actor_image[filename])
+        del(self.__actor_position[filename])
+
+
+    def __get_center_points(self, num_actors):
+        dist = self.__video.size[0] / (num_actors + 1)
+        points = []
+        x = 0
+        for actor in range(num_actors):
+            x += dist
+            points.append(x)
+        return points
+    
     def __dummy_audio(self, current_frame, last_frame):
         pass
 
@@ -196,3 +283,13 @@ class UI(object):
     def waste(self, stime):
         _DEB('Waste: %s' % stime)
         time.sleep(stime)
+
+    def __draw_scene(self, show_actors=None):
+        if show_actors is None:
+            show_actors = self.__actors
+        self.__video.show_image(self.__last_frame)
+        for actor in show_actors:
+            self.__video.show_image(
+                self.__actor_image[actor],
+                self.__actor_position[actor]
+            )

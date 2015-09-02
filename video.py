@@ -36,6 +36,21 @@ class Screen(object):
                             ((self.size[1] - image.get_height()) / 2))
             self.__dirty.append(self.__screen.blit(image, position))
 
+        def get_image(self, rect):
+            scr = self.__screen.get_rect()
+            if scr.contains(rect):
+                return self.__screen.subsurface(rect).copy()
+            image = pygame.Surface(rect.size)
+            image.fill(pygame.Color(0, 0, 0, 0))
+            visible = scr.clip(rect)
+            x, y = 0, 0
+            if rect.x < scr.x:
+                x = rect.width - visible.width
+            if rect.y < scr.y:
+                y = rect.height - visible.height                
+            image.blit(self.__screen.subsurface(visible), (x, y))
+            return image
+        
         def update(self):
             pygame.display.update(self.__dirty)
             self.__dirty = []

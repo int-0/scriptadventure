@@ -132,6 +132,14 @@ class AdventureScript(cmd.Cmd):
             return
         self.__ui.waste(stime)
 
+    def do_enter_actor(self, line):
+        "Enter actor into the scene"
+        self.__ui.enter_actor(line)
+
+    def do_leave_actor(self, line):
+        "Leave actor from the scene"
+        self.__ui.leave_actor(line)
+
     def do_include(self, line):
         "Include another adsc file"
         with open(line, 'rt') as fd:
